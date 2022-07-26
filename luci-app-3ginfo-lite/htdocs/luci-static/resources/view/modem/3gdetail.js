@@ -333,6 +333,21 @@ return view.extend({
 						}
 						}
 					}
+				
+					if (document.getElementById('protocol')) {
+						var view = document.getElementById("protocol");
+						if (json.signal == 0 || json.signal == '') {
+						view.textContent = '-';
+						}
+						else {
+						if (json.protocol == '') { 
+						view.textContent = '-';
+						}
+						else {
+						view.textContent = json.protocol;
+						}
+						}
+					}
 
 					if (document.getElementById('fw')) {
 						var view = document.getElementById("fw");
@@ -612,6 +627,10 @@ return view.extend({
 				E('tr', { 'class': 'tr' }, [
 					E('td', { 'class': 'td left', 'width': '33%' }, [ _('IP adress / Communication Port:')]),
 					E('td', { 'class': 'td left', 'id': 'cport' }, [ '-' ]),
+					]),
+				E('tr', { 'class': 'tr' }, [
+					E('td', { 'class': 'td left', 'width': '33%' }, [ _('Protocol:')]),
+					E('td', { 'class': 'td left', 'id': 'protocol' }, [ '-' ]),
 					]),
 				E('tr', { 'id': 'tempn', 'class': 'tr' }, [
 					E('td', { 'class': 'td left', 'width': '33%' }, [ _('Chip Temperature:')]),
