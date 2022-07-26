@@ -364,30 +364,16 @@ return view.extend({
 						}
 					}
 
-					if (document.getElementById('protocol')) {
-						var view = document.getElementById("protocol");
-						if (json.signal == 0 || json.signal == '') {
-						view.textContent = '-';
-						}
-						else {
-						if (json.protocol == '') { 
-						view.textContent = '-';
-						}
-						else {
-						view.textContent = json.protocol;
-						}
-						}
-					}
-
+					
 					if (document.getElementById('temp')) {
 						var view = document.getElementById("temp");
 						var viewn = document.getElementById("tempn");
 						var t = json.mtemp;
 						if (t == '') { 
-						viewn.style.display = "none";
+							viewn.style.display = "none";
 						}
 						else {
-						view.textContent = t.replace('&deg;', '°');
+							view.textContent = t.replace('&deg;', '°');
 						}
 					}
 
@@ -615,10 +601,10 @@ return view.extend({
 					E('td', { 'class': 'td left', 'width': '33%' }, [ _('Modem type:')]),
 					E('td', { 'class': 'td left', 'id': 'modem' }, [ '-' ]),
 					]),
-                E('tr', { 'class': 'tr' }, [
-                    E('td', { 'class': 'td left', 'width': '33%' }, [ _('IMEI:')]),
-                    E('td', { 'class': 'td left', 'id': 'imei' }, [ '-' ]),
-                    ]),
+				E('tr', { 'class': 'tr' }, [
+				    	E('td', { 'class': 'td left', 'width': '33%' }, [ _('IMEI:')]),
+				    	E('td', { 'class': 'td left', 'id': 'imei' }, [ '-' ]),
+				    	]),
 				E('tr', { 'class': 'tr' }, [
 					E('td', { 'class': 'td left', 'width': '33%' }, [ _('Revision / Firmware:')]),
 					E('td', { 'class': 'td left', 'id': 'fw' }, [ '-' ]),
@@ -626,10 +612,6 @@ return view.extend({
 				E('tr', { 'class': 'tr' }, [
 					E('td', { 'class': 'td left', 'width': '33%' }, [ _('IP adress / Communication Port:')]),
 					E('td', { 'class': 'td left', 'id': 'cport' }, [ '-' ]),
-					]),
-				E('tr', { 'class': 'tr' }, [
-					E('td', { 'class': 'td left', 'width': '33%' }, [ _('Protocol:')]),
-					E('td', { 'class': 'td left', 'id': 'protocol' }, [ '-' ]),
 					]),
 				E('tr', { 'id': 'tempn', 'class': 'tr' }, [
 					E('td', { 'class': 'td left', 'width': '33%' }, [ _('Chip Temperature:')]),
