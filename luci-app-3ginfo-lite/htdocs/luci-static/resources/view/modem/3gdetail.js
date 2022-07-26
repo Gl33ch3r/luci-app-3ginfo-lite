@@ -272,7 +272,7 @@ return view.extend({
 					    }
 					}
 
-                    if (document.getElementById('number')) {
+                    			if (document.getElementById('number')) {
 						var view = document.getElementById("number");
 						if (json.signal == 0 || json.signal == '') {
 						view.textContent = '-';
@@ -595,10 +595,10 @@ return view.extend({
 					E('td', { 'class': 'td left', 'id': 'sim' }, [ '-' ]),
 					]),
 
-                E('tr', { 'class': 'tr' }, [
-                    E('td', { 'class': 'td left', 'width': '33%' }, [ _('Mobile Number:')]),
-                    E('td', { 'class': 'td left', 'id': 'number' }, [ '-' ]),
-                    ]),
+				E('tr', { 'class': 'tr' }, [
+				    	E('td', { 'class': 'td left', 'width': '33%' }, [ _('Mobile Number:')]),
+				    	E('td', { 'class': 'td left', 'id': 'number' }, [ '-' ]),
+				    	]),
 				E('tr', { 'class': 'tr' }, [
 					E('td', { 'class': 'td left', 'width': '33%' }, [ _('Connection statistics:')]),
 					E('td', { 'class': 'td left', 'id': 'connst' }, [ '-' ]),
