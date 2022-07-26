@@ -48,10 +48,10 @@ fi
 
 	SEC=$(uci -q get 3ginfo.@3ginfo[0].network)
 	if [ -z "$SEC" ]; then
-		getpath $DEVICE
+		#getpath $DEVICE
 		PORIG=$P
 		for DEV in /sys/class/tty/* /sys/class/usbmisc/*; do
-			getpath "/dev/"${DEV##/*/}
+			#getpath "/dev/"${DEV##/*/}
 			if [ "x$PORIG" = "x$P" ]; then
 				SEC=$(uci show network | grep "/dev/"${DEV##/*/} | cut -f2 -d.)
 				[ -n "$SEC" ] && break
@@ -126,11 +126,6 @@ fi
 COPZ=$(echo $COPS | sed ':s;s/\(\<\S*\>\)\(.*\)\<\1\>/\1\2/g;ts')
 COPS=$(echo $COPZ | awk '{for(i=1;i<=NF;i++){ $i=toupper(substr($i,1,1)) substr($i,2) }}1')
 
-T=$(echo "$O" | awk -F[,\ ] '/^\+CPIN:/ {print $0;exit}' | xargs)
-if [ -n "$T" ]; then
-	[ "$T" = "+CPIN: READY" ] || REG=$(echo "$T" | cut -f2 -d: | xargs)
-fi
-
 T=$(echo "$O" | awk -F[,\ ] '/^\+CME ERROR:/ {print $0;exit}')
 if [ -n "$T" ]; then
 	case "$T" in
@@ -146,36 +141,15 @@ if [ -n "$T" ]; then
 	esac
 fi
 
+
+T=$(echo "$O" | awk -F[,\ ] '/^\+CPIN:/ {print $0;exit}' | xargs)
+if [ -n "$T" ]; then
+	[ "$T" = "+CPIN: READY" ] || REG=$(echo "$T" | cut -f2 -d: | xargs)
+fi
+
 # CREG
 eval $(echo "$O" | awk -F[,] '/^\+CREG/ {gsub(/[[:space:]"]+/,"");printf "T=\"%d\";LAC_HEX=\"%X\";CID_HEX=\"%X\";LAC_DEC=\"%d\";CID_DEC=\"%d\";MODE_NUM=\"%d\"", $2, "0x"$3, "0x"$4, "0x"$3, "0x"$4, $5}')
-case "$T" in
-	0*)
-		REG="0"
-		CSQ="-"
-		CSQ_PER=0
-		;;
-	1*)
-		REG="1"
-		;;
-	2*)
-		REG="2"
-		CSQ="-"
-		CSQ_PER=0
-		;;
-	3*)
-		REG="3"
-		CSQ="-"
-		CSQ_PER=0
-		;;
-	5*)
-		REG="5"
-		;;
-	*)
-		REG="-"
-		CSQ="-"
-		CSQ_PER=0
-		;;
-esac
+
 
 # MODE
 if [ -z "$MODE_NUM" ] || [ "x$MODE_NUM" = "x0" ]; then
