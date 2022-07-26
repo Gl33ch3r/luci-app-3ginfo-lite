@@ -145,7 +145,7 @@ fi
 
 T=$(echo "$O" | awk -F[,\ ] '/^\+CPIN:/ {print $0;exit}' | xargs)
 if [ -n "$T" ]; then
-	[ "$T" = "+CPIN: READY" ] || REG=$(echo "$T" | cut -f2 -d: | xargs)
+	REG=$(echo "$T" | cut -f2 -d: | xargs)
 fi
 
 # CREG
