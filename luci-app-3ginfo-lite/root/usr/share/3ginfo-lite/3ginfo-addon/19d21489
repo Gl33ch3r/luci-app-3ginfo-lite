@@ -57,9 +57,11 @@ case "$MODE_NUM" in
 		case "$T" in
 			*"LTE B1") MODE=$(band 1 "LTE ");;
 			*"LTE B3") MODE=$(band 3 "LTE ");;
-			*"LTE B7") MODE=$(band 7 "LTE ");;
+			*"LTE B5") MODE=$(band 5 "LTE ");;
 			*"LTE B8") MODE=$(band 8 "LTE ");;
-			*"LTE B20") MODE=$(band 20 "LTE ");;
+			*"LTE B28") MODE=$(band 28 "LTE ");;
+			*"LTE B40") MODE=$(band 40 "LTE ");;
+			*"LTE B41") MODE=$(band 41 "LTE ");;
 			*) MODE="${T}";;
 		esac
 
@@ -89,9 +91,11 @@ case "$MODE_NUM" in
 				case $T in
 					*"1") MODE="${MODE/LTE/LTE_A} / "$(band 1 "");;
 					*"3") MODE="${MODE/LTE/LTE_A} / "$(band 3 "");;
-					*"7") MODE="${MODE/LTE/LTE_A} / "$(band 7 "");;
+					*"5") MODE="${MODE/LTE/LTE_A} / "$(band 5 "");;
 					*"8") MODE="${MODE/LTE/LTE_A} / "$(band 8 "");;
-					*"20") MODE="${MODE/LTE/LTE_A} / "$(band 20 "");;
+					*"28") MODE="${MODE/LTE/LTE_A} / "$(band 28 "");;
+					*"40") MODE="${MODE/LTE/LTE_A} / "$(band 40 "");;
+					*"41") MODE="${MODE/LTE/LTE_A} / "$(band 41 "");;
 					*) MODE="${MODE/LTE/LTE_A} / B${T}";;
 				esac
 					MODE=$(echo $MODE | sed "s/LTE_A/LTE-A |/g")
