@@ -97,7 +97,7 @@ O=$(sms_tool -D -d $DEVICE at "AT+CSQ;+CPIN?;+COPS=3,0;+COPS?;+COPS=3,2;+COPS?;+
 CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}')
 
 [ "x$CSQ" = "x" ] && CSQ=-1
-if [ $CSQ -ge 0 -a $CSQ -le 95 ]; then
+if [ $CSQ -ge 0 -a $CSQ -le 31 ]; then
 	CSQ_PER=$(($CSQ * 100/95))
 else
 	CSQ="-"
