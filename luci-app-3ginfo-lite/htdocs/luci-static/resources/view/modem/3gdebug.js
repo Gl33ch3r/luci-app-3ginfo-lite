@@ -22,7 +22,6 @@ return view.extend({
 
 		return E([], [
 			E('h2', {}, [ _('3ginfo-lite') ]),
-			E('div', { class: 'cbi-section-descr' }, _('More information about the 3ginfo on the')+ ' <a href="https://eko.one.pl/?p=openwrt-3ginfo" target="_blank">' + _('eko.one.pl forum') + '</a>.'),
 			E('h4', {}, [ _('cat /sys/kernel/debug/usb/devices') ]),
 			E('div', { 'id': 'content_syslog' }, [
 				E('pre', {
