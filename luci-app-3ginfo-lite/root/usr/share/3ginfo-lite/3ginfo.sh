@@ -10,9 +10,11 @@ band() {
 	case "$1" in
 		1) echo "${2}B1 (2100 MHz)";;
 		3) echo "${2}B3 (1800 MHz)";;
-		7) echo "${2}B7 (2600 MHz)";;
+		5) echo "${2}B5 (850 MHz)";;
 		8) echo "${2}B8 (900 MHz)";;
-		20) echo "${2}B20 (800 MHz)";;
+		28) echo "${2}B28 (700 MHz)";;
+		40) echo "${2}B40 (2300 MHz)";;
+		41) echo "${2}B41 (2500 MHz)";;
 		*) echo "$1";;
 	esac
 }
@@ -89,7 +91,7 @@ if [ -n "$NETUP" ]; then
 
 fi
 
-O=$(sms_tool -D -d $DEVICE at "AT+CSQ;+CPIN?;+COPS=3,0;+COPS?;+COPS=3,2;+COPS?;+CREG=2;+CREG?")
+O=$(sms_tool -D -d $DEVICE at "AT+CSQ;+CPIN?;+COPS=3,0;+COPS?;+COPS=3,2;+COPS?;+CREG=2;+CREG?;*MRD_IMEI?;+CNUM;+cereg")
 
 # CSQ
 CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}')
@@ -101,6 +103,19 @@ else
 	CSQ="-"
 	CSQ_PER=0
 fi
+
+# IMEI
+I=$(echo "$O" | awk -F[,\ ] '/^\*MRD_IMEI?:/ {print $0;exit}' | xargs)
+if [ -n "$I" ]; then
+	IMEI=$(echo "$I" | cut -f2 -d: | xargs | sed 's/\(.\{15\}\).*/\1/')
+fi
+
+N=$(echo "$O" | awk -F[,\ ] '/^\+CNUM:/ {print $0;exit}' | xargs)
+if [ -n "$N" ]; then
+	NUMBER=$(echo "$N" | cut -f2 -d, | xargs | sed 's/\(.\{13\}\).*/\1/')
+fi
+
+
 
 # COPS numeric
 COPS_NUM=$(echo "$O" | awk -F[\"] '/^\+COPS: .,2/ {print $2}')
@@ -126,9 +141,10 @@ fi
 COPZ=$(echo $COPS | sed ':s;s/\(\<\S*\>\)\(.*\)\<\1\>/\1\2/g;ts')
 COPS=$(echo $COPZ | awk '{for(i=1;i<=NF;i++){ $i=toupper(substr($i,1,1)) substr($i,2) }}1')
 
-T=$(echo "$O" | awk -F[,\ ] '/^\+CME ERROR:/ {print $0;exit}')
-
+T=$(echo "$O" | awk -F[,\ ] '/^\+CPIN:/ {print $0;exit}' | xargs)
 if [ -n "$T" ]; then
+	REG=$(echo "$T" | cut -f2 -d: | xargs)
+elif [ -n "$T" ]; then
 	case "$T" in
 	"+CME ERROR: 10"*) REG="SIM not inserted";;
 	"+CME ERROR: 11"*) REG="SIM PIN required";;
@@ -140,12 +156,6 @@ if [ -n "$T" ]; then
 	"+CME ERROR: 18"*) REG="SIM PUK2 required";;
 	*) REG=$(echo "$T" | cut -f2 -d: | xargs);;
 	esac
-fi
-
-
-T=$(echo "$O" | awk -F[,\ ] '/^\+CPIN:/ {print $0;exit}' | xargs)
-if [ -n "$T" ]; then
-	REG=$(echo "$T" | cut -f2 -d: | xargs)
 fi
 
 # CREG
@@ -167,8 +177,7 @@ case "$MODE_NUM" in
 esac
 
 # TAC
-OTX=$(sms_tool -d $DEVICE at "at+cereg")
-TAC=$(echo "$OTX" | awk -F[,] '/^\+CEREG/ {printf "%s", toupper($3)}' | sed 's/[^A-F0-9]//g')
+TAC=$(echo "$O" | awk -F[,] '/^\+CEREG/ {printf "%s", toupper($3)}' | sed 's/[^A-F0-9]//g')
 if [ "x$TAC" != "x" ]; then
 	TAC_HEX=$(printf %d 0x$TAC)
 else
@@ -200,24 +209,6 @@ for _DEV in $_DEVS; do
 done
 
 fi
-
-I=$(sms_tool -D -d /dev/ttyACM0 at "AT*MRD_IMEI?")
-
-if [ -n "$I" ]; then
-
-	IMEI=$(echo "$I" | cut -f2 -d: | xargs | sed 's/\(.\{15\}\).*/\1/')
-
-fi
-
-N=$(sms_tool -D -d /dev/ttyACM0 at "AT+CNUM")
-
-if [ -n "$N" ]; then
-
-	NUMBER=$(echo "$N" | cut -f2 -d, | xargs | sed 's/\(.\{13\}\).*/\1/')
-
-fi
-
-
 
 cat <<EOF
 {
