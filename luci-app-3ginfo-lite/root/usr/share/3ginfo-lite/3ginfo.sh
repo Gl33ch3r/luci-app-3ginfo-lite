@@ -91,7 +91,7 @@ if [ -n "$NETUP" ]; then
 
 fi
 
-O=$(sms_tool -D -d $DEVICE at "AT+CSQ;+CPIN?;+COPS=3,0;+COPS?;+COPS=3,2;+COPS?;+CREG=2;+CREG?;*MRD_IMEI?;+CNUM;+cereg")
+O=$(sms_tool -D -d $DEVICE at "AT+CSQ;+CPIN?;+COPS=3,0;+COPS?;+COPS=3,2;+COPS?;+CREG=2;+CREG?;*MRD_IMEI?;+CNUM")
 
 # CSQ
 CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}')
@@ -109,7 +109,7 @@ I=$(echo "$O" | awk -F[,\ ] '/^\*MRD_IMEI?:/ {print $0;exit}' | xargs)
 if [ -n "$I" ]; then
 	IMEI=$(echo "$I" | cut -f2 -d: | xargs | sed 's/\(.\{15\}\).*/\1/')
 fi
-
+# NUMBER
 N=$(echo "$O" | awk -F[,\ ] '/^\+CNUM:/ {print $0;exit}' | xargs)
 if [ -n "$N" ]; then
 	NUMBER=$(echo "$N" | cut -f2 -d, | xargs | sed 's/\(.\{13\}\).*/\1/')
@@ -177,7 +177,10 @@ case "$MODE_NUM" in
 esac
 
 # TAC
-TAC=$(echo "$O" | awk -F[,] '/^\+CEREG/ {printf "%s", toupper($3)}' | sed 's/[^A-F0-9]//g')
+OTX=$(sms_tool -d $DEVICE at "at+cereg")
+
+TAC=$(echo "$OTX" | awk -F[,] '/^\+CEREG/ {printf "%s", toupper($3)}' | sed 's/[^A-F0-9]//g')
+
 if [ "x$TAC" != "x" ]; then
 	TAC_HEX=$(printf %d 0x$TAC)
 else
@@ -209,6 +212,7 @@ for _DEV in $_DEVS; do
 done
 
 fi
+
 
 cat <<EOF
 {
