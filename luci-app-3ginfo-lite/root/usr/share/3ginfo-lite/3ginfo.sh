@@ -3,7 +3,7 @@
 #
 # (c) 2010-2022 Cezary Jackiewicz <cezary@eko.one.pl>
 #
-# (c) 2021-2022 modified by Rafał Wabik - IceG - From eko.one.pl forum
+# (c) 2021-2022 modified by GL33ch3r
 #
 
 band() {
@@ -95,8 +95,8 @@ O=$(sms_tool -D -d $DEVICE at "AT+CSQ;+CPIN?;+COPS=3,0;+COPS?;+COPS=3,2;+COPS?;+
 CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}')
 
 [ "x$CSQ" = "x" ] && CSQ=-1
-if [ $CSQ -ge 0 -a $CSQ -le 31 ]; then
-	CSQ_PER=$(($CSQ * 100/91))
+if [ $CSQ -ge 0 -a $CSQ -le 95 ]; then
+	CSQ_PER=$(($CSQ * 100/95))
 else
 	CSQ="-"
 	CSQ_PER=0
@@ -127,6 +127,7 @@ COPZ=$(echo $COPS | sed ':s;s/\(\<\S*\>\)\(.*\)\<\1\>/\1\2/g;ts')
 COPS=$(echo $COPZ | awk '{for(i=1;i<=NF;i++){ $i=toupper(substr($i,1,1)) substr($i,2) }}1')
 
 T=$(echo "$O" | awk -F[,\ ] '/^\+CME ERROR:/ {print $0;exit}')
+
 if [ -n "$T" ]; then
 	case "$T" in
 	"+CME ERROR: 10"*) REG="SIM not inserted";;
@@ -200,6 +201,23 @@ done
 
 fi
 
+I=$(sms_tool -D -d /dev/ttyACM0 at "AT*MRD_IMEI?")
+
+if [ -n "$I" ]; then
+
+	IMEI=$(echo "$I" | cut -f2 -d: | xargs | sed 's/\(.\{15\}\).*/\1/')
+
+fi
+
+N=$(sms_tool -D -d /dev/ttyACM0 at "AT+CNUM")
+
+if [ -n "$N" ]; then
+
+	NUMBER=$(echo "$N" | cut -f2 -d, | xargs | sed 's/\(.\{13\}\).*/\1/')
+
+fi
+
+
 
 cat <<EOF
 {
@@ -209,6 +227,8 @@ cat <<EOF
 "modem":"$MODEL",
 "mtemp":"$TEMP",
 "firmware":"$FW",
+"imei":"$IMEI",
+"number":"$NUMBER",
 "cport":"$DEVICE",
 "protocol":"$PROTO",
 "csq":"$CSQ",
