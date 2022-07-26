@@ -269,7 +269,22 @@ return view.extend({
 						if (json.registration == '3') { 
 							view.textContent = _('Registering denied');
 						}
+					    }
 					}
+
+                    if (document.getElementById('number')) {
+						var view = document.getElementById("number");
+						if (json.signal == 0 || json.signal == '') {
+						view.textContent = '-';
+						}
+						else {
+						if (json.number == '') { 
+						view.textContent = '-';
+						}
+						else {
+						view.textContent = json.number;
+						}
+						}
 					}
 
 					if (document.getElementById('mode')) {
@@ -299,6 +314,22 @@ return view.extend({
 						}
 						else {
 						view.textContent = json.modem;
+						}
+						}
+					}
+
+                    
+					if (document.getElementById('imei')) {
+						var view = document.getElementById("imei");
+						if (json.signal == 0 || json.signal == '') {
+						view.textContent = '-';
+						}
+						else {
+						if (json.imei == '') { 
+						view.textContent = '-';
+						}
+						else {
+						view.textContent = json.imei;
 						}
 						}
 					}
@@ -563,6 +594,11 @@ return view.extend({
 					E('td', { 'class': 'td left', 'width': '33%' }, [ _('SIM status:')]),
 					E('td', { 'class': 'td left', 'id': 'sim' }, [ '-' ]),
 					]),
+
+                E('tr', { 'class': 'tr' }, [
+                    E('td', { 'class': 'td left', 'width': '33%' }, [ _('Mobile Number:')]),
+                    E('td', { 'class': 'td left', 'id': 'number' }, [ '-' ]),
+                    ]),
 				E('tr', { 'class': 'tr' }, [
 					E('td', { 'class': 'td left', 'width': '33%' }, [ _('Connection statistics:')]),
 					E('td', { 'class': 'td left', 'id': 'connst' }, [ '-' ]),
@@ -579,6 +615,10 @@ return view.extend({
 					E('td', { 'class': 'td left', 'width': '33%' }, [ _('Modem type:')]),
 					E('td', { 'class': 'td left', 'id': 'modem' }, [ '-' ]),
 					]),
+                E('tr', { 'class': 'tr' }, [
+                    E('td', { 'class': 'td left', 'width': '33%' }, [ _('IMEI:')]),
+                    E('td', { 'class': 'td left', 'id': 'imei' }, [ '-' ]),
+                    ]),
 				E('tr', { 'class': 'tr' }, [
 					E('td', { 'class': 'td left', 'width': '33%' }, [ _('Revision / Firmware:')]),
 					E('td', { 'class': 'td left', 'id': 'fw' }, [ '-' ]),
@@ -671,11 +711,11 @@ return view.extend({
 					]),
 
 				E('tr', { 'class': 'tr' }, [
-					E('td', { 'class': 'td left', 'width': '33%' }, [ _('(S) band: ')]),
+					E('td', { 'class': 'td left', 'width': '33%' }, [ _('Secondary band: ')]),
 					E('td', { 'class': 'td left', 'id': 'sband' }, [ '-' ]),
 					]),
 				E('tr', { 'class': 'tr' }, [
-					E('td', { 'class': 'td left', 'width': '33%' }, [ _('(S) PCI & (S) EARFCN: ')]),
+					E('td', { 'class': 'td left', 'width': '33%' }, [ _('Secondary PCI & EARFCN: ')]),
 					E('td', { 'class': 'td left', 'id': 'spci' }, [ '-' ]),
 					]),
 			]),
@@ -686,4 +726,3 @@ return view.extend({
 	handleSave: null,
 	handleReset: null
 });
-
